@@ -34,10 +34,10 @@ export default function Home() {
           KAPITAL GRANTS
         </Link>
         <a
-          href="mailto:hello@kapital.vc"
+          href="mailto:info@kapitalgrants.me"
           className="text-sm text-neutral-300 transition-colors hover:text-white"
         >
-          hello@kapital.vc
+          info@kapitalgrants.me
         </a>
       </header>
 
