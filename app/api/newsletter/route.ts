@@ -23,9 +23,16 @@ export async function POST(request: Request) {
   }
 
   if (!process.env.RESEND_API_KEY || !process.env.RESEND_AUDIENCE_ID) {
-    console.error("Missing RESEND_API_KEY or RESEND_AUDIENCE_ID env vars.");
+    // TEMPORARY DEBUG: names the missing variable instead of a generic message.
+    const missing = [
+      !process.env.RESEND_API_KEY && "RESEND_API_KEY",
+      !process.env.RESEND_AUDIENCE_ID && "RESEND_AUDIENCE_ID",
+    ]
+      .filter(Boolean)
+      .join(", ");
+    console.error("Missing env vars:", missing);
     return NextResponse.json(
-      { error: "Newsletter signup is not configured yet." },
+      { error: `Missing env var(s) in this deployment: ${missing}` },
       { status: 500 }
     );
   }
@@ -40,8 +47,15 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Resend error:", error);
+      // TEMPORARY DEBUG: surfaces the real Resend reason on the page so the
+      // cause is visible without digging through logs. Revert to the generic
+      // message once signup is working.
       return NextResponse.json(
-        { error: "Could not subscribe right now. Try again shortly." },
+        {
+          error: `Resend [${error.name ?? "unknown"}]: ${
+            error.message ?? "no message"
+          }`,
+        },
         { status: 502 }
       );
     }
