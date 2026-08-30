@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   }
 
   if (!process.env.RESEND_API_KEY || !process.env.RESEND_AUDIENCE_ID) {
-    // TEMPORARY DEBUG: names the missing variable instead of a generic message.
+    // The specific missing name goes to the server log only, never to the client.
     const missing = [
       !process.env.RESEND_API_KEY && "RESEND_API_KEY",
       !process.env.RESEND_AUDIENCE_ID && "RESEND_AUDIENCE_ID",
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       .join(", ");
     console.error("Missing env vars:", missing);
     return NextResponse.json(
-      { error: `Missing env var(s) in this deployment: ${missing}` },
+      { error: "Newsletter signup is not configured yet." },
       { status: 500 }
     );
   }
@@ -46,16 +46,10 @@ export async function POST(request: Request) {
     });
 
     if (error) {
+      // Full detail stays in the server log; the client gets a plain message.
       console.error("Resend error:", error);
-      // TEMPORARY DEBUG: surfaces the real Resend reason on the page so the
-      // cause is visible without digging through logs. Revert to the generic
-      // message once signup is working.
       return NextResponse.json(
-        {
-          error: `Resend [${error.name ?? "unknown"}]: ${
-            error.message ?? "no message"
-          }`,
-        },
+        { error: "Could not subscribe right now. Try again shortly." },
         { status: 502 }
       );
     }
