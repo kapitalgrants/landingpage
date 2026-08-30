@@ -16,8 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title:
-    "Kapital Grants | Non-dilutive capital to start. Institutional capital to scale.",
+  title: "Kapital Grants",
   description:
     "Kapital Grants is a deal-flow engine for founders. We route you through grants, accelerators, and our vetted network of VCs and family offices.",
 };
